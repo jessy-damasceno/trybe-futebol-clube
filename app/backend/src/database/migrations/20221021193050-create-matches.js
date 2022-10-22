@@ -39,7 +39,7 @@ module.exports = {
       },
       in_progress: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
       }
 		});
 	},
