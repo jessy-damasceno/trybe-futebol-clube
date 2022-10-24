@@ -7,7 +7,7 @@ export const validateLogin = (payload: ILogin) => {
   if (error) {
     return {
       type: 'invalidField',
-      message: error.details[0].message,
+      message: 'All fields must be filled',
     };
   }
   return { type: null };
