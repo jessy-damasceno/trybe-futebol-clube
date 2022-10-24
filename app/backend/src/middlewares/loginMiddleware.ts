@@ -12,9 +12,9 @@ export const fields = async (req: Request, _res: Response, next: NextFunction) =
 };
 
 export const login = async (req: Request, _res: Response, next: NextFunction) => {
-  const isValid = await userService.login(req.body);
+  const isUser = await userService.isUser(req.body);
 
-  return isValid ? next() : next({
+  return isUser ? next() : next({
     type: 'unauthorizedUser',
     message: 'Incorrect email or password',
   });
