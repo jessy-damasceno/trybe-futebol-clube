@@ -6,7 +6,7 @@ export const validateLogin = (payload: ILogin) => {
 
   if (error) {
     return {
-      type: 'INVALID_FIELD',
+      type: 'invalidField',
       message: error.details[0].message,
     };
   }
