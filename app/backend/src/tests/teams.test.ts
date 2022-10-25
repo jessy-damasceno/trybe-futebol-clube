@@ -15,14 +15,15 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Teste /login', () => {
+describe('Teste /teams', () => {
   let chaiHttpResponse: Response;
 
-  afterEach(() => {
+  after(() => {
     (Team.findAll as sinon.SinonStub).restore();
+    (Team.findByPk as sinon.SinonStub).restore();
   })
 
-  it('Retorna todos os times', async () => {
+  it('Retorna todos os times na rota /teams', async () => {
     sinon.stub(Team, "findAll").resolves(allTeamsMock as Team[]);
 
     chaiHttpResponse = await chai
@@ -33,5 +34,18 @@ describe('Teste /login', () => {
     
     expect(chaiHttpResponse.status).to.be.eq(200);
     expect(chaiHttpResponse.body).to.be.deep.eq(allTeamsMock);
+  });
+
+  it('Retorna um time pelo id na rota /teams/:id', async () => {
+    sinon.stub(Team, "findByPk").resolves(allTeamsMock[0] as Team);
+
+    chaiHttpResponse = await chai
+       .request(app)
+       .get('/teams/1');
+
+    console.log(chaiHttpResponse.body);
+    
+    expect(chaiHttpResponse.status).to.be.eq(200);
+    expect(chaiHttpResponse.body).to.be.deep.eq(allTeamsMock[0]);
   });
 });
