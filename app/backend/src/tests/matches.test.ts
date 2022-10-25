@@ -17,7 +17,7 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe.only('Teste /matches', () => {
+describe('Teste /matches', () => {
   let chaiHttpResponse: Response;
 
   before(() => {
