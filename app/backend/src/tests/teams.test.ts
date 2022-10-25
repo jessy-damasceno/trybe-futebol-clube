@@ -30,8 +30,6 @@ describe('Teste /teams', () => {
        .request(app)
        .get('/teams');
 
-    console.log(chaiHttpResponse.body);
-    
     expect(chaiHttpResponse.status).to.be.eq(200);
     expect(chaiHttpResponse.body).to.be.deep.eq(allTeamsMock);
   });
@@ -43,8 +41,6 @@ describe('Teste /teams', () => {
        .request(app)
        .get('/teams/1');
 
-    console.log(chaiHttpResponse.body);
-    
     expect(chaiHttpResponse.status).to.be.eq(200);
     expect(chaiHttpResponse.body).to.be.deep.eq(allTeamsMock[0]);
   });
