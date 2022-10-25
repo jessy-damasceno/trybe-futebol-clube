@@ -15,7 +15,7 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe.only('Teste /login', () => {
+describe('Teste /login', () => {
   let chaiHttpResponse: Response;
 
   afterEach(() => {
