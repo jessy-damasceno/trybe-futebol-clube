@@ -15,21 +15,23 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Teste /login', () => {
+describe.only('Teste /login', () => {
   let chaiHttpResponse: Response;
 
   afterEach(() => {
     (Team.findAll as sinon.SinonStub).restore();
   })
 
-  it('É possível fazer login com os dados corretos, retornando um token', async () => {
+  it('Retorna todos os times', async () => {
     sinon.stub(Team, "findAll").resolves(allTeamsMock as Team[]);
 
     chaiHttpResponse = await chai
        .request(app)
        .get('/teams');
 
+    console.log(chaiHttpResponse.body);
+    
     expect(chaiHttpResponse.status).to.be.eq(200);
-    expect(chaiHttpResponse.body).to.be.an('array').eq(allTeamsMock);
+    expect(chaiHttpResponse.body).to.be.deep.eq(allTeamsMock);
   });
 });
