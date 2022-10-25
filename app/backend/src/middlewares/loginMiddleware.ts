@@ -1,6 +1,11 @@
+import * as jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import userService from '../services/users.service';
 import { validateLogin } from '../validations/validations';
+import { IUser } from '../interfaces';
+import User from '../database/models/User';
+
+const secret = process.env.JWT_SECRET || 'my_secret';
 
 export const fields = async (req: Request, _res: Response, next: NextFunction) => {
   const error = validateLogin(req.body);
@@ -18,4 +23,27 @@ export const login = async (req: Request, _res: Response, next: NextFunction) =>
     type: 'unauthorizedUser',
     message: 'Incorrect email or password',
   });
+};
+
+export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
+  const token = req.header('Authorization') as string;
+  if (!token) {
+    next({
+      type: 'TOKEN_ERROR',
+      message: 'Token not found',
+    });
+  }
+
+  try {
+    const verified = jwt.verify(token, secret) as IUser;
+    const user = await User.findOne({ where: { ...verified } });
+
+    if (!user) {
+      next({ type: 'TOKEN_ERROR', message: 'Expired or invalid token' });
+    }
+    res.locals.user = user; // User info between middlewares
+    next();
+  } catch (err) {
+    next({ type: 'TOKEN_ERROR', message: 'Expired or invalid token' });
+  }
 };
