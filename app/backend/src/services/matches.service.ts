@@ -3,12 +3,22 @@ import Match from '../database/models/Match';
 import Team from '../database/models/Team';
 
 class MatchService {
-  public findAll = async (): Promise<IMatch[] | []> => await Match
-    .findAll({
-      include: [{ model: Team, as: 'teamHome' }, { model: Team, as: 'teamAway' }],
-    }) || [];
+  public findAll = async (inProgress: string | undefined): Promise<IMatch[] | []> => {
+    const matchesList = await Match
+      .findAll({
+        include: [{ model: Team, as: 'teamHome' }, { model: Team, as: 'teamAway' }],
+      });
+
+    if (inProgress !== undefined && (inProgress === 'true' || inProgress === 'false')) {
+      return matchesList.filter((e) => e.inProgress === this.stringToBool(inProgress));
+    }
+
+    return matchesList;
+  };
 
   public findOne = async (id: number): Promise<IMatch | null> => Match.findByPk(id);
+
+  private stringToBool = (string: string): boolean => string === 'true';
 }
 
 export default new MatchService();

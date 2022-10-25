@@ -6,7 +6,8 @@ class MatchesController {
   constructor(private matchService = MatchService) { }
 
   public getAll = async (req: Request, res: Response) => {
-    const matchesList = await this.matchService.findAll();
+    const { inProgress } = req.query;
+    const matchesList = await this.matchService.findAll(inProgress as string);
 
     return res.status(statusCodes.ok).json(matchesList);
   };
