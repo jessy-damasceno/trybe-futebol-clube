@@ -23,7 +23,7 @@ describe('Teste /login', () => {
   })
 
   it('É possível fazer login com os dados corretos, retornando um token', async () => {
-    sinon.stub(Team, "findAll").resolves(allTeamsMock as any);
+    sinon.stub(Team, "findAll").resolves(allTeamsMock as Team[]);
 
     chaiHttpResponse = await chai
        .request(app)
