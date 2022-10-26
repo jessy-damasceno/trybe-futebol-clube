@@ -19,6 +19,12 @@ class MatchService {
   public findOne = async (id: number): Promise<IMatch | null> => Match.findByPk(id);
 
   private stringToBool = (string: string): boolean => string === 'true';
+
+  public create = (payload: IMatch, inProgress: boolean): Promise<IMatch> => {
+    const matchCreated = Match.create({ ...payload, inProgress });
+
+    return matchCreated;
+  };
 }
 
 export default new MatchService();

@@ -5,9 +5,9 @@ export const loginSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
-export const addUserSchema = Joi.object({
-  username: Joi.string().min(3).required(),
-  classe: Joi.string().min(3).required(),
-  level: Joi.number().min(1).required(),
-  password: Joi.string().min(8).required(),
+export const addNewMatchSchema = Joi.object({
+  homeTeam: Joi.number().required(),
+  awayTeam: Joi.number().required(),
+  homeTeamGoals: Joi.number().required(),
+  awayTeamGoals: Joi.number().required(),
 });

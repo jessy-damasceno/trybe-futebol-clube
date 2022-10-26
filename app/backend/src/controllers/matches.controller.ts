@@ -18,6 +18,12 @@ class MatchesController {
 
     return res.status(statusCodes.ok).json(match);
   };
+
+  public create = async (req: Request, res: Response) => {
+    const matchCreated = await this.matchService.create(req.body, true);
+
+    return res.status(statusCodes.created).json(matchCreated);
+  };
 }
 
 export default new MatchesController();
