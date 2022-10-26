@@ -102,3 +102,36 @@ export const matchesNotInProgress = [
     }
   },
 ]
+
+export const createdMatch = {
+  homeTeam: 16,
+  awayTeam: 8,
+  homeTeamGoals: 2,
+  awayTeamGoals: 2,
+  inProgress: true,
+}
+
+export const correctBodyToCreateMatch = {
+  homeTeam: 16,
+  awayTeam: 8,
+  homeTeamGoals: 2,
+  awayTeamGoals: 2
+}
+
+export const incorrectBodyToCreateMatch1 = {
+  awayTeam: 8,
+  homeTeamGoals: 2,
+  awayTeamGoals: 2
+}
+
+export const incorrectBodyToCreateMatch2 = {
+  homeTeam: 16,
+  homeTeamGoals: 2,
+  awayTeamGoals: 2
+}
+
+export const incorrectBodyToCreateMatch3 = {
+  homeTeam: 16,
+  awayTeam: 8,
+  awayTeamGoals: 2
+}
