@@ -13,7 +13,7 @@ export const validateLogin = (payload: ILogin) => {
   return { type: null };
 };
 
-export const validateNewMatch = (payload: IMatch) => {
+export const validateNewMatch = (payload: IMatch | null) => {
   const { error } = schemas.addNewMatchSchema.validate(payload);
 
   if (error) {

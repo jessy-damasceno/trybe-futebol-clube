@@ -25,6 +25,15 @@ class MatchService {
 
     return matchCreated;
   };
+
+  public finishMatch = async (id: number): Promise<string> => {
+    await Match.update({ inProgress: true }, {
+      where: {
+        id,
+      },
+    });
+    return 'Finished';
+  };
 }
 
 export default new MatchService();

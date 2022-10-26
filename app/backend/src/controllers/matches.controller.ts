@@ -24,6 +24,13 @@ class MatchesController {
 
     return res.status(statusCodes.created).json(matchCreated);
   };
+
+  public finishMatch = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const message = await this.matchService.finishMatch(Number(id));
+
+    return res.status(statusCodes.ok).json({ message });
+  };
 }
 
 export default new MatchesController();

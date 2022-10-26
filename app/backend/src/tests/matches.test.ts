@@ -75,4 +75,14 @@ describe('Teste /matches', () => {
     expect(chaiHttpResponse.status).to.be.eq(201);
     expect(chaiHttpResponse.body).to.be.deep.eq(createdMatch);
   });
+
+  it('Não cria uma nova partida caso o corpo da requisição não seja preenchido corretamente em POST /matches', async () => {
+    chaiHttpResponse = await chai
+       .request(app)
+       .post('/matches')
+       .send(correctBodyToCreateMatch);
+
+    expect(chaiHttpResponse.status).to.be.eq(201);
+    expect(chaiHttpResponse.body).to.be.deep.eq(createdMatch);
+  });
 });
