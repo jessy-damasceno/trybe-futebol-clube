@@ -33,12 +33,12 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      next({ type: 'notFound', message: 'User not found' });
+      next({ type: 'tokenError', message: 'Token must be a valid token' });
     }
 
     res.locals.user = user; // User info between middlewares
     next();
   } catch (err) {
-    next({ type: 'tokenError', message: 'Expired or invalid token' });
+    next({ type: 'tokenError', message: 'Token must be a valid token' });
   }
 };
