@@ -27,7 +27,7 @@ class MatchService {
   };
 
   public finishMatch = async (id: number): Promise<string> => {
-    await Match.update({ inProgress: true }, {
+    await Match.update({ inProgress: false }, {
       where: {
         id,
       },
