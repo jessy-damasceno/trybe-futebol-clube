@@ -31,6 +31,15 @@ class MatchesController {
 
     return res.status(statusCodes.ok).json({ message });
   };
+
+  public updateMatch = async (req: Request, res: Response) => {
+    const { homeTeamGoals, awayTeamGoals } = req.body;
+    const { id } = req.params;
+
+    const match = await this.matchService.updateMatch(Number(id), homeTeamGoals, awayTeamGoals);
+
+    return res.status(statusCodes.ok).json(match);
+  };
 }
 
 export default new MatchesController();

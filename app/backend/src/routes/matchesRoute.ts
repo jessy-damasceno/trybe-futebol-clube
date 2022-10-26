@@ -5,6 +5,11 @@ import * as loginMiddleware from '../middlewares/loginMiddleware';
 
 const matchesRouter = Router();
 
+matchesRouter.patch('/:id/finish', matchesController.finishMatch);
+matchesRouter.route('/:id')
+  .patch(matchesController.updateMatch)
+  .get(matchesController.getOne);
+
 matchesRouter.route('/')
   .get(matchesController.getAll)
   .post(
@@ -14,9 +19,5 @@ matchesRouter.route('/')
     isValidTeams,
     matchesController.create,
   );
-
-matchesRouter.get('/:id', matchesController.getOne);
-
-matchesRouter.patch('/:id/finish', matchesController.finishMatch);
 
 export default matchesRouter;

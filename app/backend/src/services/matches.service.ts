@@ -34,6 +34,15 @@ class MatchService {
     });
     return 'Finished';
   };
+
+  public updateMatch = async (id: number, g1: number, g2: number) => {
+    const updatedMatch = await Match.update({ homeTeamGoals: g1, awayTeamGoals: g2 }, {
+      where: {
+        id,
+      },
+    });
+    return updatedMatch;
+  };
 }
 
 export default new MatchService();
