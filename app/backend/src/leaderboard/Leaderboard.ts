@@ -1,4 +1,4 @@
-import { IMatch, ITeamResults, TeamResult } from '../interfaces';
+import { IMatch, ITeam, ITeamResults, TeamResult } from '../interfaces';
 
 const INITIAL_TEAM_TABLE = {
   name: '',
@@ -16,6 +16,28 @@ const INITIAL_TEAM_TABLE = {
 abstract class Leaderboard {
   protected teamsResults: ITeamResults = {};
   public table: TeamResult[];
+
+  protected initialize(matches: IMatch[], teams: ITeam[]) {
+    Object.keys(this.teamsResults).forEach((team) => {
+      const { totalVictories, totalDraws,
+        goalsFavor, goalsOwn, totalGames, totalLosses } = this.teamsResults[team as never];
+
+      const teamPoints = this.totalPoints(totalVictories, totalDraws);
+
+      this.teamsResults[team as never].totalPoints = teamPoints;
+      this.teamsResults[team as never].totalLosses = totalLosses;
+      this.teamsResults[team as never].totalDraws = totalDraws;
+      this.teamsResults[team as never].totalVictories = totalVictories;
+      this.teamsResults[team as never].goalsBalance = this.goalsBalance(goalsFavor, goalsOwn);
+      this.teamsResults[team as never].efficiency = this.efficiency(teamPoints, totalGames);
+    });
+
+    this.table = teams.map((team) => {
+      this.teamsResults[team.id as number].name = team.teamName;
+
+      return this.teamsResults[team.id as number];
+    }).sort(this.sortTable);
+  }
 
   protected increaseMatch = (teams: number[]): void => {
     for (let i = 0; i < teams.length; i += 1) {
