@@ -1,9 +1,10 @@
-import { IMatch, ITeam, ITeamResults } from '../interfaces';
+import { IMatch, ITeam, ITeamResults, TeamResult } from '../interfaces';
 
 class Leaderboard {
-  public teamsResults: ITeamResults = {};
+  private teamsResults: ITeamResults = {};
+  public table: TeamResult[];
 
-  constructor(private matches: IMatch[], public teams: ITeam[]) {
+  constructor(private matches: IMatch[], teams: ITeam[]) {
     this.matches.forEach((match) => this.setResults(match));
 
     Object.keys(this.teamsResults).forEach((team) => {
@@ -15,6 +16,12 @@ class Leaderboard {
       this.teamsResults[team as never].totalPoints = teamPoints;
       this.teamsResults[team as never].goalsBalance = this.goalsBalance(goalsFavor, goalsOwn);
       this.teamsResults[team as never].efficiency = this.efficiency(teamPoints, totalGames);
+    });
+
+    this.table = teams.map((team) => {
+      this.teamsResults[team.id as number].name = team.teamName;
+
+      return this.teamsResults[team.id as number];
     });
   }
 
