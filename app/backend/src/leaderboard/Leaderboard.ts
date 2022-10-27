@@ -22,11 +22,12 @@ class Leaderboard {
 
     Object.keys(this.teamsResults).forEach((team) => {
       const { totalVictories, totalDraws,
-        goalsFavor, goalsOwn, totalGames } = this.teamsResults[team as never];
+        goalsFavor, goalsOwn, totalGames, totalLosses } = this.teamsResults[team as never];
 
       const teamPoints = this.totalPoints(totalVictories, totalDraws);
 
       this.teamsResults[team as never].totalPoints = teamPoints;
+      this.teamsResults[team as never].totalLosses = totalLosses;
       this.teamsResults[team as never].goalsBalance = this.goalsBalance(goalsFavor, goalsOwn);
       this.teamsResults[team as never].efficiency = this.efficiency(teamPoints, totalGames);
     });
