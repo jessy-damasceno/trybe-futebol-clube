@@ -1,8 +1,11 @@
 import Leaderboard from './Leaderboard';
-
-const lint = 'prefer export default';
+import LeaderboardAway from './LeaderboardAway';
+import LeaderboardHome from './LeaderboardHome';
+import LeaderboardAll from './LeaderboardAll';
 
 export {
   Leaderboard,
-  lint,
+  LeaderboardAway,
+  LeaderboardHome,
+  LeaderboardAll,
 };

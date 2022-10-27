@@ -1,4 +1,4 @@
-import { IMatch, ITeam, ITeamResults, TeamResult } from '../interfaces';
+import { IMatch, ITeamResults, TeamResult } from '../interfaces';
 
 const INITIAL_TEAM_TABLE = {
   name: '',
@@ -13,35 +13,11 @@ const INITIAL_TEAM_TABLE = {
   efficiency: 0,
 };
 
-class Leaderboard {
-  private teamsResults: ITeamResults = {};
+abstract class Leaderboard {
+  protected teamsResults: ITeamResults = {};
   public table: TeamResult[];
 
-  constructor(private matches: IMatch[], teams: ITeam[]) {
-    this.matches.forEach((match) => this.setResults(match));
-
-    Object.keys(this.teamsResults).forEach((team) => {
-      const { totalVictories, totalDraws,
-        goalsFavor, goalsOwn, totalGames, totalLosses } = this.teamsResults[team as never];
-
-      const teamPoints = this.totalPoints(totalVictories, totalDraws);
-
-      this.teamsResults[team as never].totalPoints = teamPoints;
-      this.teamsResults[team as never].totalLosses = totalLosses;
-      this.teamsResults[team as never].totalDraws = totalDraws;
-      this.teamsResults[team as never].totalVictories = totalVictories;
-      this.teamsResults[team as never].goalsBalance = this.goalsBalance(goalsFavor, goalsOwn);
-      this.teamsResults[team as never].efficiency = this.efficiency(teamPoints, totalGames);
-    });
-
-    this.table = teams.map((team) => {
-      this.teamsResults[team.id as number].name = team.teamName;
-
-      return this.teamsResults[team.id as number];
-    }).sort(this.sortTable);
-  }
-
-  private increaseMatch = (teams: number[]): void => {
+  protected increaseMatch = (teams: number[]): void => {
     for (let i = 0; i < teams.length; i += 1) {
       if (!this.teamsResults[teams[i]]) {
         this.teamsResults[teams[i]] = Object.create(INITIAL_TEAM_TABLE);
@@ -50,15 +26,15 @@ class Leaderboard {
     }
   };
 
-  private increaseGoalsFavor = (team: number, homeTeamGoals: number): void => {
+  protected increaseGoalsFavor = (team: number, homeTeamGoals: number): void => {
     this.teamsResults[team].goalsFavor += homeTeamGoals;
   };
 
-  private increaseGoalsOwn = (team: number, awayTeamGoals: number): void => {
+  protected increaseGoalsOwn = (team: number, awayTeamGoals: number): void => {
     this.teamsResults[team].goalsOwn += awayTeamGoals;
   };
 
-  private increaseGoals = (
+  protected increaseGoals = (
     homeTeam: number,
     homeTeamGoals: number,
     awayTeam: number,
@@ -70,50 +46,34 @@ class Leaderboard {
     this.increaseGoalsOwn(awayTeam, homeTeamGoals);
   };
 
-  private increaseWin = (team: number): void => {
+  protected increaseWin = (team: number): void => {
     this.teamsResults[team].totalVictories += 1;
   };
 
-  private increaseLoss = (team: number): void => {
+  protected increaseLoss = (team: number): void => {
     this.teamsResults[team].totalLosses += 1;
   };
 
-  private increaseDraw = (teams: number[]): void => {
+  protected increaseDraw = (teams: number[]): void => {
     for (let i = 0; i < teams.length; i += 1) {
       this.teamsResults[teams[i]].totalDraws += 1;
     }
   };
 
-  private totalPoints = (wins: number, draws: number): number => (3 * wins) + draws;
+  protected totalPoints = (wins: number, draws: number): number => (3 * wins) + draws;
 
-  private efficiency = (points: number, totalMatches: number): number => {
+  protected efficiency = (points: number, totalMatches: number): number => {
     const possiblePoints = totalMatches * 3;
     const response = ((points / possiblePoints) * 100).toFixed(2);
 
     return Number(response);
   };
 
-  private goalsBalance = (gp: number, gc: number): number => gp - gc;
+  protected goalsBalance = (gp: number, gc: number): number => gp - gc;
 
-  protected setResults = (match: IMatch): void => {
-    const { homeTeam, homeTeamGoals, awayTeam, awayTeamGoals } = match;
+  abstract setResults(match: IMatch): void;
 
-    this.increaseMatch([homeTeam, awayTeam]);
-
-    this.increaseGoals(homeTeam, homeTeamGoals, awayTeam, awayTeamGoals);
-
-    if (homeTeamGoals > awayTeamGoals) {
-      this.increaseWin(homeTeam);
-      this.increaseLoss(awayTeam);
-    } else if (awayTeamGoals > homeTeamGoals) {
-      this.increaseWin(awayTeam);
-      this.increaseLoss(homeTeam);
-    } else if (homeTeamGoals === awayTeamGoals) {
-      this.increaseDraw([homeTeam, awayTeam]);
-    }
-  };
-
-  private sortTable = (a: TeamResult, b: TeamResult) => {
+  protected sortTable = (a: TeamResult, b: TeamResult) => {
     let sort = b.totalPoints - a.totalPoints;
     if (!sort) sort = b.totalVictories - a.totalVictories;
     if (!sort) sort = b.goalsBalance - a.goalsBalance;
