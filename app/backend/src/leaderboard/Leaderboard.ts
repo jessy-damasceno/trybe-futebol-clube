@@ -35,7 +35,7 @@ class Leaderboard {
       this.teamsResults[team.id as number].name = team.teamName;
 
       return this.teamsResults[team.id as number];
-    });
+    }).sort(this.sortTable);
   }
 
   private increaseMatch = (teams: number[]): void => {
@@ -85,13 +85,14 @@ class Leaderboard {
 
   private efficiency = (points: number, totalMatches: number): number => {
     const possiblePoints = totalMatches * 3;
+    const response = ((points / possiblePoints) * 100).toFixed(2);
 
-    return (points / possiblePoints) * 100;
+    return Number(response);
   };
 
   private goalsBalance = (gp: number, gc: number): number => gp - gc;
 
-  private setResults = (match: IMatch): void => {
+  protected setResults = (match: IMatch): void => {
     const { homeTeam, homeTeamGoals, awayTeam, awayTeamGoals } = match;
 
     this.increaseMatch([homeTeam, awayTeam]);
@@ -107,6 +108,15 @@ class Leaderboard {
     } else if (homeTeamGoals === awayTeamGoals) {
       this.increaseDraw([homeTeam, awayTeam]);
     }
+  };
+
+  private sortTable = (a: TeamResult, b: TeamResult) => {
+    let sort = b.totalPoints - a.totalPoints;
+    if (!sort) sort = b.totalVictories - a.totalVictories;
+    if (!sort) sort = b.goalsBalance - a.goalsBalance;
+    if (!sort) sort = b.goalsFavor - a.goalsFavor;
+    if (!sort) sort = b.goalsOwn - a.goalsOwn;
+    return sort;
   };
 }
 
