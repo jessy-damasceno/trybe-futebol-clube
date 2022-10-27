@@ -28,6 +28,8 @@ class Leaderboard {
 
       this.teamsResults[team as never].totalPoints = teamPoints;
       this.teamsResults[team as never].totalLosses = totalLosses;
+      this.teamsResults[team as never].totalDraws = totalDraws;
+      this.teamsResults[team as never].totalVictories = totalVictories;
       this.teamsResults[team as never].goalsBalance = this.goalsBalance(goalsFavor, goalsOwn);
       this.teamsResults[team as never].efficiency = this.efficiency(teamPoints, totalGames);
     });
