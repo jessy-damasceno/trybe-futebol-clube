@@ -1,5 +1,18 @@
 import { IMatch, ITeam, ITeamResults, TeamResult } from '../interfaces';
 
+const INITIAL_TEAM_TABLE = {
+  name: '',
+  totalPoints: 0,
+  totalGames: 0,
+  totalVictories: 0,
+  totalDraws: 0,
+  totalLosses: 0,
+  goalsFavor: 0,
+  goalsOwn: 0,
+  goalsBalance: 0,
+  efficiency: 0,
+};
+
 class Leaderboard {
   private teamsResults: ITeamResults = {};
   public table: TeamResult[];
@@ -27,7 +40,10 @@ class Leaderboard {
 
   private increaseMatch = (teams: number[]): void => {
     for (let i = 0; i < teams.length; i += 1) {
-      this.teamsResults[teams[i] as keyof typeof this.teamsResults].totalGames += 1;
+      if (!this.teamsResults[teams[i]]) {
+        this.teamsResults[teams[i]] = Object.create(INITIAL_TEAM_TABLE);
+      }
+      this.teamsResults[teams[i]].totalGames += 1;
     }
   };
 
@@ -61,7 +77,7 @@ class Leaderboard {
 
   private increaseDraw = (teams: number[]): void => {
     for (let i = 0; i < teams.length; i += 1) {
-      this.teamsResults[teams[i] as keyof typeof this.teamsResults].totalDraws += 1;
+      this.teamsResults[teams[i]].totalDraws += 1;
     }
   };
 
@@ -79,19 +95,16 @@ class Leaderboard {
     const { homeTeam, homeTeamGoals, awayTeam, awayTeamGoals } = match;
 
     this.increaseMatch([homeTeam, awayTeam]);
+
     this.increaseGoals(homeTeam, homeTeamGoals, awayTeam, awayTeamGoals);
 
     if (homeTeamGoals > awayTeamGoals) {
       this.increaseWin(homeTeam);
       this.increaseLoss(awayTeam);
-    }
-
-    if (awayTeamGoals > homeTeamGoals) {
+    } else if (awayTeamGoals > homeTeamGoals) {
       this.increaseWin(awayTeam);
       this.increaseLoss(homeTeam);
-    }
-
-    if (homeTeamGoals === awayTeamGoals) {
+    } else if (homeTeamGoals === awayTeamGoals) {
       this.increaseDraw([homeTeam, awayTeam]);
     }
   };
