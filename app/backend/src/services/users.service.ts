@@ -7,11 +7,8 @@ class UserService {
   private secret: string;
 
   constructor() {
-    this.secret = process.env.JWT_SECRET || 'my_secret';
+    this.secret = process.env.JWT_SECRET as string;
   }
-
-  public findAll = async (): Promise<IUser[] | []> => await User
-    .findAll({ attributes: { exclude: ['password'] } }) || [];
 
   public isUser = async ({ email, password }: ILogin): Promise<boolean> => {
     const user = await User.findOne({ where: { email } });

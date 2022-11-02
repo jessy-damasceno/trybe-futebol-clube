@@ -1,5 +1,7 @@
 import * as sinon from 'sinon';
 import * as chai from 'chai';
+import * as jwt from 'jsonwebtoken';
+
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
@@ -14,7 +16,10 @@ import {
   invalidLoginPassword,
   emptyEmail,
   emptyPassword,
+  validToken,
+  invalidToken,
 } from './mocks/login.mock';
+import usersService from '../services/users.service';
 
 chai.use(chaiHttp);
 
@@ -85,5 +90,46 @@ describe('Teste /login', () => {
 
     expect(chaiHttpResponse.status).to.be.eq(400);
     expect(chaiHttpResponse.body.message).to.be.eq('All fields must be filled');
+  });
+
+  it('Rota /validate com um token válido retorna o tipo de usuário.', async () => {
+    const token = usersService.generateToken(userMock);
+    sinon.stub(User, "findOne").resolves(userMock as User);
+
+    chaiHttpResponse = await chai
+       .request(app)
+       .get('/login/validate')
+       .set({ "Authorization": token });
+
+    expect(chaiHttpResponse.status).to.be.eq(200);
+    expect(chaiHttpResponse.body).to.be.deep.eq({ role: 'user' });
+
+  });
+
+  it('Rota /validate com um token inválido retorna mensagem de erro.', async () => {
+    sinon.stub(User, "findOne").resolves(userMock as User);
+
+    chaiHttpResponse = await chai
+       .request(app)
+       .get('/login/validate')
+       .set({ "Authorization": invalidToken });
+
+    expect(chaiHttpResponse.status).to.be.eq(401);
+    expect(chaiHttpResponse.body.message).to.be.eq('Token must be a valid token');
+  });
+
+  it('Rota /validate retorna mensagem de erro se usuário não for encontrado com token passado.', async () => {
+    sinon.stub(User, "findOne").resolves(null);
+    sinon.stub(jwt, "verify").resolves(true);
+
+    chaiHttpResponse = await chai
+       .request(app)
+       .get('/login/validate')
+       .set({ "Authorization": validToken });
+
+    expect(chaiHttpResponse.status).to.be.eq(401);
+    expect(chaiHttpResponse.body.message).to.be.eq('Token must be a valid token');
+
+    (jwt.verify as sinon.SinonStub).restore();
   });
 });

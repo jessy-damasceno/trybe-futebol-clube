@@ -5,7 +5,7 @@ import { validateLogin } from '../validations/validations';
 import { IUser } from '../interfaces';
 import User from '../database/models/User';
 
-const secret = process.env.JWT_SECRET || 'jwt_secret';
+const secret = process.env.JWT_SECRET;
 
 export const fields = async (req: Request, _res: Response, next: NextFunction) => {
   const error = validateLogin(req.body);
@@ -29,7 +29,7 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
   const token = req.header('Authorization') as string;
 
   try {
-    const { email } = jwt.verify(token, secret) as IUser;
+    const { email } = jwt.verify(token, secret as string) as IUser;
     const user = await User.findOne({ where: { email } });
 
     if (!user) {

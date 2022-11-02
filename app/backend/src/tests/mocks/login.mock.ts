@@ -28,3 +28,6 @@ export const emptyEmail = {
 export const emptyPassword = {
   email: 'user@user.com',
 }
+
+export const validToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlci5jb20iLCJwYXNzd29yZCI6InNlY3JldF91c2VyIiwiaWF0IjoxNjY2NzIyMDU5LCJleHAiOjE2NjczMjY4NTl9.lG-YdMDrlMKJkYRP2Fq_bJUA7gXQCvHQzlOO71DMdc0'
+export const invalidToken = 'invalid.Token'
