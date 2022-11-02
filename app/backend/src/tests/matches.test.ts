@@ -40,12 +40,13 @@ describe('Teste /matches', () => {
 
   after(() => {
     (Match.findAll as sinon.SinonStub).restore();
+    (Match.findByPk as sinon.SinonStub).restore();
     (Match.create as sinon.SinonStub).restore();
     (jwt.verify as sinon.SinonStub).restore();
     (User.findOne as sinon.SinonStub).restore();
   })
 
-  it('Retorna todas as partidas na rota /matches', async () => {
+  it('Retorna a partida na rota /matches/:id', async () => {
     chaiHttpResponse = await chai
        .request(app)
        .get('/matches/1');
@@ -54,7 +55,7 @@ describe('Teste /matches', () => {
     expect(chaiHttpResponse.body).to.be.deep.eq(allMatchesMock[0]);
   });
 
-  it('Retorna a partida na rota /matches/:id', async () => {
+  it('Retorna todas as partidas na rota /matches', async () => {
     chaiHttpResponse = await chai
        .request(app)
        .get('/matches');
