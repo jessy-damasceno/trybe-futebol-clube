@@ -135,3 +135,17 @@ export const incorrectBodyToCreateMatch3 = {
   awayTeam: 8,
   awayTeamGoals: 2
 }
+
+export const equalTeamsBody = {
+  homeTeam: 1,
+  awayTeam: 1,
+  homeTeamGoals: 2,
+  awayTeamGoals: 2
+}
+
+export const invalidTeamsBody = {
+  homeTeam: 9999,
+  awayTeam: 9998,
+  homeTeamGoals: 2,
+  awayTeamGoals: 2
+}
